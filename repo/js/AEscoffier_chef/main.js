@@ -7545,6 +7545,7 @@
         let select_cooking_mode;
         let extraTime;
         let check_quality;
+        let add_times_noscroll;
         try {
             food_choice_single_select = typeof(settings.food_choice_single_select) === "undefined" ? "无(默认)": settings.food_choice_single_select;
         } catch(error) {
@@ -7803,6 +7804,12 @@
             log.error(`check_quality 读取错误: ${error}`);
             return false;
         }
+        try {
+            add_times_noscroll = typeof(settings.add_times_noscroll) === "undefined" ? false: settings.add_times_noscroll;
+        } catch(error) {
+            log.error(`add_times_noscroll 读取错误: ${error}`);
+            return false;
+        }
         return {
             "food_choice_single_select": food_choice_single_select,
             "food_Max_HP_Boost": food_Max_HP_Boost,
@@ -7846,7 +7853,8 @@
             "food_character_num": food_character_num,
             "select_cooking_mode": select_cooking_mode,
             "extra_time": extraTime,
-            "check_quality": check_quality
+            "check_quality": check_quality,
+            "add_times_noscroll": add_times_noscroll,
         }
     }
 
@@ -8055,6 +8063,7 @@
         task_dic["other_settings"]["cooking_mode"] = setting_dic["select_cooking_mode"];
         task_dic["other_settings"]["extra_time"] = setting_dic["extra_time"];
         task_dic["other_settings"]["check_quality"] = setting_dic["check_quality"];
+        task_dic["other_settings"]["add_times_noscroll"] = setting_dic["add_times_noscroll"];
 
         return task_dic;
     }
@@ -8453,16 +8462,18 @@
             log.error("当前不处于料理制作界面...");
             return false;
         }
-        // 滑动到顶部
-        await scroll_pages_main("up", 10);
-        for (let i = 0; i < 30; i++) {
-            let food_choice = await select_food_by_fullname(await deal_string(food_name));
-            if (food_choice) {
-                return true;
-            } else {
-                let scroll_result = await scroll_pages_main("down", 1);
-                if (!scroll_result) {
-                    break;
+        if (!setting_dic["other_settings"]["add_times_noscroll"]){
+            // 滑动到顶部
+            await scroll_pages_main("up", 10);
+            for (let i = 0; i < 30; i++) {
+                let food_choice = await select_food_by_fullname(await deal_string(food_name));
+                if (food_choice) {
+                    return true;
+                } else {
+                    let scroll_result = await scroll_pages_main("down", 1);
+                    if (!scroll_result) {
+                        break;
+                    }
                 }
             }
         }
@@ -8491,16 +8502,18 @@
             log.error("当前不处于烹饪界面...");
             return false;
         }
-        // 滑动到顶部
-        await scroll_pages_cooking("up", 15);
-        for (let i = 0; i < 10; i++) {
-            let character_choice = await select_character_by_fullname(name);
-            if (character_choice) {
-                return true;
-            } else {
-                let scroll_result = await scroll_pages_main("down", 1);
-                if (!scroll_result) {
-                    break;
+        if (!setting_dic["other_settings"]["add_times_noscroll"]){
+            // 滑动到顶部
+            await scroll_pages_cooking("up", 15);
+            for (let i = 0; i < 10; i++) {
+                let character_choice = await select_character_by_fullname(name);
+                if (character_choice) {
+                    return true;
+                } else {
+                    let scroll_result = await scroll_pages_main("down", 1);
+                    if (!scroll_result) {
+                        break;
+                    }
                 }
             }
         }
