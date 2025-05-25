@@ -228,6 +228,11 @@
     "options": ["优先自动烹饪(默认)", "优先手动烹饪", "刷满熟练度(将选择的可烹饪食物熟练度刷满)"]
   },
   {
+    "name": "add_times_noscroll",
+    "type": "checkbox",
+    "label": "刷熟练度跳过滑块"
+  },
+  {
     "name": "extraTime",
     "type": "input-text",
     "label": "额外的烹饪时间(ms)"
